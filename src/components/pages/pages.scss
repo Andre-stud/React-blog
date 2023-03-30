@@ -1,0 +1,139 @@
+.sing-page {
+  display: flex;
+  flex-direction: column;
+  width: 384px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 60px;
+  background-color: white;
+  padding-left: 32px;
+  padding-right: 32px;
+  border-radius: 6px;
+  box-shadow: 0px 22px 106px rgba(0, 0, 0, 0.07),
+    0px 9.19107px 44.2843px rgba(0, 0, 0, 0.0503198),
+    0px 4.91399px 23.6765px rgba(0, 0, 0, 0.0417275),
+    0px 2.75474px 13.2728px rgba(0, 0, 0, 0.035),
+    0px 1.46302px 7.04911px rgba(0, 0, 0, 0.0282725),
+    0px 0.608796px 2.93329px rgba(0, 0, 0, 0.0196802);
+}
+
+.sing-page__header {
+  width: 311px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.sing-page__name-input {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  margin-bottom: 3px;
+}
+
+.checkbox-sing-up {
+  margin-top: 21px;
+  margin-right: 8px;
+  border-top: 1px solid #e8e8e8;
+  font-size: 14px;
+  padding-top: 8px;
+  border: 1px solid #1890ff;
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+}
+
+.sing-page__button {
+  margin-top: 21px;
+  background: #1890ff;
+  height: 40px;
+  color: #ffffff;
+}
+
+.sing-page__input {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  height: 40px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding-left: 12px;
+  color: black;
+  font-size: 16px;
+}
+
+.sing-link {
+  color: #1890ff;
+}
+
+.sing-page__question {
+  width: 319px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 48px;
+  text-align: center;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.new-article {
+  width: 938px;
+}
+
+.tag-input {
+  width: 300px;
+}
+
+.tags-options__button {
+  margin-left: 20px;
+  width: 100px;
+  height: 40px;
+}
+
+.sing-page__button-delete {
+  color: #f5222d;
+  border-color: #f5222d;
+}
+
+.sing-page__button-add {
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+.send-tag-button {
+  width: 320px;
+  margin-bottom: 48px;
+}
+
+.new-article__name-input {
+  margin-top: 21px;
+}
+
+.article-page {
+  padding-bottom: 67px;
+}
+
+.body-class {
+  padding-bottom: 20px;
+}
+
+.edit-profile-button {
+  margin-bottom: 48px;
+}
+
+.new-article__name-textarea{
+  resize: none;
+  margin-top: 2px;
+  height: 168px;
+  border: 1px solid #D9D9D9;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: black;
+  padding-left: 12px;
+  padding-top: 7px;
+}

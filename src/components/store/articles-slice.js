@@ -36,14 +36,79 @@ export const fetchArticle = createAsyncThunk(
       const article = await responseArticle.json();
       dispatch(selectArticle(article));
 
-      return article;
+      return article.article.author.username;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-// export const 
+export const fetchDeliteArticle = createAsyncThunk(
+  "article/fetchDeliteArticle",
+  async (value, { rejectWithValue }) => {
+    const userAuthorized = localStorage.getItem("user");
+    const token = JSON.parse(userAuthorized).user.token;
+
+    try {
+      const responseArticle = await fetch(
+        `https://blog.kata.academy/api/articles/${value}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      if (!responseArticle.ok) {
+        throw new Error("responseId error");
+      }
+
+      // const article = await responseArticle.json();
+      // console.log(responseArticle.ok);
+      // console.log(article)
+
+      return responseArticle.ok;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetcCreateArticle = createAsyncThunk(
+  "article/fetcCreateArticle",
+  async (dataArticle, { rejectWithValue }) => {
+    const userAuthorized = localStorage.getItem("user");
+    const token = JSON.parse(userAuthorized).user.token;
+
+    try {
+      const responseArticle = await fetch(
+        `https://blog.kata.academy/api/articles`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${token}`,
+
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(dataArticle),
+        }
+      );
+
+      if (!responseArticle.ok) {
+        throw new Error("responseId error");
+      }
+
+      const article = await responseArticle.json();
+      // console.log(responseArticle.ok);
+      // console.log(article)
+
+      return responseArticle.ok;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const articlesSlice = createSlice({
   name: "articl",

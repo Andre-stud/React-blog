@@ -7,6 +7,7 @@ import NewArticlePage from "../pages/new-article-page";
 import ArticlePage from "../pages/article-page";
 import CardsList from "../cards-list";
 import EditProfile from "../pages/edit-profile";
+import EditArticlePage from "../pages/edit-article";
 import Layout from "../layout";
 import { Pagination } from "antd";
 import { Routes, Route } from "react-router-dom";
@@ -65,7 +66,15 @@ function App() {
           <Route path="/new-article" element={<NewArticlePage />} />
           <Route
             path={`/articles/${slug}`}
-            element={<ArticlePage articleData={articleData.article} />}
+            element={
+              <ArticlePage articleData={articleData.article} page={page} />
+            }
+          />
+          <Route
+            path={`/articles/${slug}/edit`}
+            element={
+              <NewArticlePage articleData={articleData.article} page={page} />
+            }
           />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="*" element={cardListPage} />

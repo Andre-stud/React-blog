@@ -1,10 +1,9 @@
 import { Input } from "antd";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { fetchUser } from "../store/user-slice";
 import "./pages.scss";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 
 function SignInPage() {
   const {
@@ -14,8 +13,7 @@ function SignInPage() {
   } = useForm();
 
   const dispatch = useDispatch();
-
-  const [authorizationDone, setAuthorizationDone] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmitSignIn = (value) => {
     const userData = {
@@ -25,18 +23,14 @@ function SignInPage() {
       },
     };
 
-    const path = 'users/login';
+    const path = "users/login";
 
-    dispatch(fetchUser({userData, path})).then(value =>{
-      if(value.meta.requestStatus === "fulfilled"){
-        setAuthorizationDone(true);
+    dispatch(fetchUser({ userData, path })).then((value) => {
+      if (value.meta.requestStatus === "fulfilled") {
+        navigate("/", { replace: true });
       }
     });
   };
-
-  if(authorizationDone === true){
-    return <Navigate to="/" />
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmitSignIn)} className="sing-page">

@@ -2,14 +2,14 @@ import { Input } from "antd";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
-import { fetchUserPut } from '../store/user-slice';
+import { useNavigate } from "react-router-dom";
+import { fetchUserPut } from "../store/user-slice";
 import "./pages.scss";
 
 function EditProfile() {
-  const [authorizationDone, setAuthorizationDone] = useState(false);
   const [nameEmailError, setNameEmailError] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -17,32 +17,26 @@ function EditProfile() {
     handleSubmit,
   } = useForm();
 
-  
   const onSubmitForm = (data) => {
-   const newUserData = {
+    const newUserData = {
       user: {
         email: data.email,
         password: data.password,
         username: data.username,
         image: data.url,
-      }
-    }
+      },
+    };
 
-
-    dispatch(fetchUserPut(newUserData)).then(value =>{
-      if(value.meta.requestStatus === "fulfilled"){
-        setAuthorizationDone(true);
+    dispatch(fetchUserPut(newUserData)).then((value) => {
+      if (value.meta.requestStatus === "fulfilled") {
+        navigate("/", { replace: true });
         setNameEmailError(false);
       }
-      if(value.meta.requestStatus === "rejected"){
+      if (value.meta.requestStatus === "rejected") {
         setNameEmailError(true);
       }
-    })
+    });
   };
-
-  if(authorizationDone === true){
-    return <Navigate to="/" />
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="sing-page">
@@ -70,9 +64,9 @@ function EditProfile() {
           placeholder="Username"
         />
       </label>
-      {nameEmailError ? <span style={{ color: "#F5222D" }}>
-      Data already in use
-        </span> : null}
+      {nameEmailError ? (
+        <span style={{ color: "#F5222D" }}>Data already in use</span>
+      ) : null}
       {errors?.username && (
         <span style={{ color: "#F5222D" }}>
           {errors?.username?.message || "Error!"}
@@ -94,9 +88,9 @@ function EditProfile() {
           placeholder="Email address"
         />
       </label>
-      {nameEmailError ? <span style={{ color: "#F5222D" }}>
-      Data already in use
-        </span> : null}
+      {nameEmailError ? (
+        <span style={{ color: "#F5222D" }}>Data already in use</span>
+      ) : null}
       {errors?.email && (
         <span style={{ color: "#F5222D" }}>
           {errors?.email?.message || "Error!"}
@@ -142,9 +136,9 @@ function EditProfile() {
           placeholder="Avatar image"
         />
       </label>
-      {nameEmailError ? <span style={{ color: "#F5222D" }}>
-      Data already in use
-        </span> : null}
+      {nameEmailError ? (
+        <span style={{ color: "#F5222D" }}>Data already in use</span>
+      ) : null}
       {errors?.url && (
         <span style={{ color: "#F5222D" }}>
           {errors?.url?.message || "Error!"}

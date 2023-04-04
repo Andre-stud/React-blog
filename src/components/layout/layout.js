@@ -5,7 +5,6 @@ import { addUserData } from "../store/user-slice";
 import avatar from "./avatar.svg";
 
 function Layout() {
-
   const userDat = useSelector((state) => state.regUser.userData);
   const userStatus = useSelector((state) => state.regUser.status);
   const userAuthorized = localStorage.getItem("user");
@@ -13,7 +12,7 @@ function Layout() {
   const [userData, setUserData] = useState(userDat);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
-  
+
   const img = user?.user?.image ? user.user.image : avatar;
 
   useEffect(() => {
@@ -42,10 +41,12 @@ function Layout() {
           Realworld Blog
         </Link>
         <div className="header-user-information">
-          {userAuthorized ? <Link to={"/new-article"} className="link-sing-up create-article">
-            Create article
-          </Link> : null}
-          
+          {userAuthorized ? (
+            <Link to={"/new-article"} className="link-sing-up create-article">
+              Create article
+            </Link>
+          ) : null}
+
           {personDitails}
 
           {userData ? (

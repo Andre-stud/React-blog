@@ -1,17 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
 export const fetchUser = createAsyncThunk(
   "regUser/fetchUser",
-  async ({userData, path}, { rejectWithValue }) => {
+  async ({ userData, path }, { rejectWithValue }) => {
     try {
-      const responseUser = await fetch(`https://blog.kata.academy/api/${path}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify(userData),
-      });
+      const responseUser = await fetch(
+        `https://blog.kata.academy/api/${path}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
 
       if (!responseUser.ok) {
         throw new Error("responseUser error");
@@ -27,12 +29,10 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
-
 export const fetchUserPut = createAsyncThunk(
   "regUser/fetchUserPut",
   async (userData, { rejectWithValue }) => {
     try {
-
       const userAuthorized = localStorage.getItem("user");
       const token = JSON.parse(userAuthorized).user.token;
 
@@ -60,7 +60,6 @@ export const fetchUserPut = createAsyncThunk(
   }
 );
 
-
 const userSlice = createSlice({
   name: "userData",
   initialState: {
@@ -87,19 +86,19 @@ const userSlice = createSlice({
       state.status = "rejected";
       state.error = actions.payload;
     },
-      [fetchUserPut.pending]: (state) => {
-        state.status = "loading";
-        state.error = null;
-      },
-      [fetchUserPut.fulfilled]: (state, actions) => {
-        state.status = "resolved";
-        state.userData = actions.payload;
-        // console.log(actions.payload)
-      },
-      [fetchUserPut.rejected]: (state, actions) => {
-        state.status = "rejected";
-        state.error = actions.payload;
-      },
+    [fetchUserPut.pending]: (state) => {
+      state.status = "loading";
+      state.error = null;
+    },
+    [fetchUserPut.fulfilled]: (state, actions) => {
+      state.status = "resolved";
+      state.userData = actions.payload;
+      // console.log(actions.payload)
+    },
+    [fetchUserPut.rejected]: (state, actions) => {
+      state.status = "rejected";
+      state.error = actions.payload;
+    },
   },
 });
 

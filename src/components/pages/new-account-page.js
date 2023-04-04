@@ -2,13 +2,12 @@ import { Input } from "antd";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchUser } from "../store/user-slice";
 import "./pages.scss";
 
 function NewAccountPage() {
   const [stateCheckbox, setStateCheckbox] = useState(false);
-  const [authorizationDone, setAuthorizationDone] = useState(false);
   const [nameEmailError, setNameEmailError] = useState(false);
 
   const {
@@ -19,6 +18,7 @@ function NewAccountPage() {
   } = useForm();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmitForm = (value) => {
     const userData = {
@@ -28,25 +28,18 @@ function NewAccountPage() {
         password: value.password,
       },
     };
+    const path = "users";
 
-    const path = 'users';
-
-    dispatch(fetchUser(userData, path)).then(value =>{
-      
-      if(value.meta.requestStatus === "fulfilled"){
-        setAuthorizationDone(true);
+    dispatch(fetchUser(userData, path)).then((value) => {
+      if (value.meta.requestStatus === "fulfilled") {
+        navigate("/", { replace: true });
         setNameEmailError(false);
       }
-      if(value.meta.requestStatus === "rejected"){
+      if (value.meta.requestStatus === "rejected") {
         setNameEmailError(true);
       }
-
     });
   };
-
-  if(authorizationDone === true){
-    return <Navigate to="/" />
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="sing-page">
@@ -74,9 +67,9 @@ function NewAccountPage() {
           placeholder="Username"
         />
       </label>
-      {nameEmailError ? <span style={{ color: "#F5222D" }}>
-           Name or email already taken!
-        </span> : null}
+      {nameEmailError ? (
+        <span style={{ color: "#F5222D" }}>Name or email already taken!</span>
+      ) : null}
 
       {errors?.username && (
         <span style={{ color: "#F5222D" }}>
@@ -99,9 +92,9 @@ function NewAccountPage() {
           placeholder="Email address"
         />
       </label>
-      {nameEmailError ? <span style={{ color: "#F5222D" }}>
-           Name or email already taken!
-        </span> : null}
+      {nameEmailError ? (
+        <span style={{ color: "#F5222D" }}>Name or email already taken!</span>
+      ) : null}
       {errors?.email && (
         <span style={{ color: "#F5222D" }}>
           {errors?.email?.message || "Error!"}

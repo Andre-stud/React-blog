@@ -1,7 +1,7 @@
 import { Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { fetchUser } from "../store/user-slice";
+import { fetchUser } from "../../store/user-slice";
 import "./pages.scss";
 import { useDispatch } from "react-redux";
 

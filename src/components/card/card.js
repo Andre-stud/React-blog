@@ -1,8 +1,13 @@
 import "./card.scss";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { fetchArticle } from "../store/articles-slice";
+import {
+  fetchArticle,
+  fetchLikeArticle,
+  fetchArticles,
+} from "../../store/articles-slice";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 function Card({
   userName,
@@ -14,7 +19,12 @@ function Card({
   tagList,
   slug,
   idx,
+  favorited,
+  page,
 }) {
+  const [isLike, setIsLike] = useState(favorited);
+  const [likesCount, setLikesCount] = useState(favoritesCount);
+
   const cardTagList = tagList.map((el, id) => (
     <span key={idx + id} className="tag">
       {el}
@@ -27,6 +37,39 @@ function Card({
     dispatch(fetchArticle(slug));
   };
 
+  const likeClick = () => {
+    const method = "POST";
+    dispatch(fetchLikeArticle({ slug, method })).then((value) => {
+      if (value.payload) {
+        setIsLike(true);
+        setLikesCount(likesCount + 1);
+        dispatch(fetchArticles(page));
+        dispatch(fetchArticle(slug));
+      }
+    });
+  };
+
+  const unLikeClick = () => {
+    const method = "DELETE";
+    dispatch(fetchLikeArticle({ slug, method })).then((value) => {
+      if (value.payload) {
+        setIsLike(false);
+        setLikesCount(likesCount - 1);
+        dispatch(fetchArticles(page));
+        dispatch(fetchArticle(slug));
+      }
+    });
+  };
+
+  const like = isLike ? (
+    <HeartFilled
+      onClick={unLikeClick}
+      className="card-header__button-like heart-filled"
+    />
+  ) : (
+    <HeartOutlined onClick={likeClick} className="card-header__button-like" />
+  );
+
   return (
     <div className="card">
       <div className="card-header">
@@ -37,10 +80,9 @@ function Card({
         >
           {title}
         </Link>
-        <HeartOutlined className="card-header__button-like" />
-        <HeartFilled className="card-header__button-like heart-filled" />
+        {like}
 
-        <span className="card-header__likes-counter">{favoritesCount}</span>
+        <span className="card-header__likes-counter">{likesCount}</span>
       </div>
       {cardTagList}
       <p className="text-card">{description}</p>

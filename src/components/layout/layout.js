@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { addUserData } from "../store/user-slice";
+import { addUserData } from "../../store/user-slice";
 import avatar from "./avatar.svg";
 
 function Layout() {

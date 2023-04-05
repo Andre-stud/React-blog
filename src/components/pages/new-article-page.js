@@ -1,14 +1,15 @@
 import { Button, Input } from "antd";
-import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
 import "./pages.scss";
 import { useDispatch } from "react-redux";
-import { fetcCreateArticle, fetchArticles } from "../store/articles-slice";
+import {
+  fetchCreateArticle,
+  fetchArticles,
+  fetchEditArticle,
+} from "../../store/articles-slice";
 
 function NewArticlePage({ articleData, page }) {
-  const [countTag, setCountTag] = useState(100);
-  const [arrTag, setArrTag] = useState([{ id: 99 }]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,21 +19,7 @@ function NewArticlePage({ articleData, page }) {
   const description = articleData?.description ? articleData.description : "";
   const body = articleData?.body ? articleData.body : "";
   const tagList = articleData?.tagList ? articleData.tagList : [];
-
-  // console.log(tagList);
-
-  // useEffect(()=>{
-  //   if(editArticle){
-  //     tagList.forEach(el=>{
-  //       const data = { id: countTag };
-
-  //       setCountTag(countTag + 1);
-  //       setArrTag((value) => [...value, data]);
-  //       console.log(data, countTag, arrTag);
-
-  //     })
-  //   }
-  // },[]);
+  const slug = articleData?.slug ? articleData.slug : null;
 
   const {
     control,
@@ -48,7 +35,7 @@ function NewArticlePage({ articleData, page }) {
     },
   });
 
-  useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
   });
@@ -69,65 +56,83 @@ function NewArticlePage({ articleData, page }) {
       },
     };
 
-    dispatch(fetcCreateArticle(dataArticle)).then((value) => {
-      if (value.payload === true) {
-        navigate("/", { replace: true });
-        dispatch(fetchArticles(page));
-      }
-    });
-  };
-
-  const onClickAddTag = () => {
-    const data = { id: countTag };
-
-    setCountTag(countTag + 1);
-    setArrTag((value) => [...value, data]);
-  };
-
-  const onClickDeliteTag = (e) => {
-    if (arrTag.length === 1) {
-      return;
+    if (articleData) {
+      dispatch(fetchEditArticle({ dataArticle, slug })).then((value) => {
+        if (value.payload === true) {
+          navigate("/", { replace: true });
+          dispatch(fetchArticles(page));
+        }
+      });
     }
 
-    const id = Number(e.target.id);
-    const idx = arrTag.findIndex((el) => el.id === id);
+    if (!articleData) {
+      dispatch(fetchCreateArticle(dataArticle)).then((value) => {
+        if (value.payload === true) {
+          navigate("/", { replace: true });
+          dispatch(fetchArticles(page));
+        }
+      });
+    }
+  };
 
-    setArrTag([...arrTag.slice(0, idx), ...arrTag.slice(idx + 1)]);
-    console.log(arrTag, id, idx);
+  const addTag = () => {
+    append("");
+  };
+
+  const removeTag = (index) => () => {
+    remove(index);
   };
 
   const allTags =
-    arrTag.length !== 0
-      ? arrTag.map((el, id) => {
-          const buttonAdd =
-            id === 0 ? (
-              <Button
-                onClick={onClickAddTag}
-                className="tags-options__button sing-page__button-add"
-              >
-                Add tag
-              </Button>
-            ) : null;
+    fields.length !== 0 ? (
+      fields.map((el, id) => {
+        const buttonAdd =
+          id === 0 ? (
+            <Button
+              onClick={addTag}
+              className="tags-options__button sing-page__button-add"
+            >
+              Add tag
+            </Button>
+          ) : null;
 
-          return (
-            <li key={el.id}>
-              <input
-                {...register(`tags[${id}]`)}
-                className="sing-page__input tag-input"
-                placeholder="Tags"
-              />
-              <input
-                type="button"
-                id={el.id}
-                onClick={onClickDeliteTag}
-                value={"Delete"}
-                className="tags-options__button sing-page__button-delete"
-              ></input>
-              {buttonAdd}
-            </li>
-          );
-        })
-      : null;
+        return (
+          <li key={el.id}>
+            <input
+              {...register(`tags.${id}`, {
+                required: "Tag is required!",
+                pattern: {
+                  value: /^[a-zA-Z0-9]+$/,
+                  message:
+                    "You can use only english letters and digits without spaces and other symbols",
+                },
+              })}
+              className="sing-page__input tag-input"
+              placeholder="Tags"
+            />
+
+            <input
+              type="button"
+              id={el.id}
+              onClick={removeTag(id)}
+              value={"Delete"}
+              className="tags-options__button sing-page__button-delete"
+            ></input>
+            {buttonAdd}
+            {errors?.tags ? (
+              <p style={{ color: "#F5222D" }}>{errors.tags[id]?.message}</p>
+            ) : null}
+          </li>
+        );
+      })
+    ) : (
+      <Button
+        onClick={addTag}
+        className="tags-options__button sing-page__button-add"
+      >
+        Add tag
+      </Button>
+    );
 
   return (
     <form
@@ -138,7 +143,13 @@ function NewArticlePage({ articleData, page }) {
       <label className="sing-page__name-input new-article__name-input">
         Title
         <input
-          {...register("title", { required: "Please enter a value." })}
+          {...register("title", {
+            required: "Please enter a value.",
+            maxLength: {
+              value: 500,
+              message: "Your title must be no more than 500 characters.",
+            },
+          })}
           className="sing-page__input"
           placeholder="Title"
         />
@@ -180,25 +191,7 @@ function NewArticlePage({ articleData, page }) {
       <label className="sing-page__name-input new-article__name-input">
         Tags
         <ul className="tags-options">
-          {allTags}
-          {/* .reverse() */}
-          {/* <Button
-              onClick={onClickAddTag}
-              className="tags-options__button sing-page__button-add"
-            >
-              Add tag
-            </Button> */}
-          {/* <li key={4}>
-            <input
-              {...register(`tags.${0}`)}
-              className="sing-page__input tag-input"
-              placeholder="Tags"
-            />
-            <button className="tags-options__button sing-page__button-delete">
-              Delete
-            </button>
-
-          </li> */}
+          {fields.length !== 0 ? allTags.reverse() : null}
         </ul>
       </label>
       <Input

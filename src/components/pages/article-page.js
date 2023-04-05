@@ -3,26 +3,38 @@ import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Button, Popconfirm } from "antd";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { fetchDeliteArticle, fetchArticles } from "../store/articles-slice";
+import {
+  fetchDeliteArticle,
+  fetchArticles,
+  fetchLikeArticle,
+  fetchArticle,
+} from "../../store/articles-slice";
 import ReactMarkdown from "react-markdown";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 function ArticlePage({ articleData, page }) {
   const userName = articleData.author.username;
   const authorAvatar = articleData.author.image;
   const createArticle = format(new Date(articleData.createdAt), "MMMM d, y");
   const description = articleData.description;
-  const favoritesCount = articleData.favoritesCount;
+  const likesCount = articleData.favoritesCount;
   const title = articleData.title;
   const tagList = articleData.tagList;
   const body = articleData.body;
   const slug = articleData.slug;
+  const isLike = articleData.favorited;
+
+  const [favorited, setFavorite] = useState(isLike);
+  const [favoritesCount, setFavoritesCount] = useState(likesCount);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userAuthorized = localStorage.getItem("user");
-  const userAuthorizedName = JSON.parse(userAuthorized).user.username;
+  const userAuthorizedName = userAuthorized
+    ? JSON.parse(userAuthorized).user.username
+    : null;
 
   const deletionConfirmationText = "Are you sure to delete this article?";
 
@@ -63,6 +75,39 @@ function ArticlePage({ articleData, page }) {
     </span>
   ));
 
+  const likeClick = () => {
+    const method = "POST";
+    dispatch(fetchLikeArticle({ slug, method })).then((value) => {
+      if (value.payload) {
+        setFavorite(true);
+        setFavoritesCount(favoritesCount + 1);
+        dispatch(fetchArticles(page));
+        dispatch(fetchArticle(slug));
+      }
+    });
+  };
+
+  const unLikeClick = () => {
+    const method = "DELETE";
+    dispatch(fetchLikeArticle({ slug, method })).then((value) => {
+      if (value.payload) {
+        setFavorite(false);
+        setFavoritesCount(favoritesCount - 1);
+        dispatch(fetchArticles(page));
+        dispatch(fetchArticle(slug));
+      }
+    });
+  };
+
+  const like = favorited ? (
+    <HeartFilled
+      onClick={unLikeClick}
+      className="card-header__button-like heart-filled"
+    />
+  ) : (
+    <HeartOutlined onClick={likeClick} className="card-header__button-like" />
+  );
+
   return (
     <div className="body-items">
       <div className="cards-list article-page">
@@ -70,9 +115,7 @@ function ArticlePage({ articleData, page }) {
           <div className="card">
             <div className="card-header">
               <p className="card-header__title">{title}</p>
-              <HeartOutlined className="card-header__button-like" />
-              <HeartFilled className="card-header__button-like heart-filled" />
-
+              {like}
               <span className="card-header__likes-counter">
                 {favoritesCount}
               </span>

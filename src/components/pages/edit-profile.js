@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchUserPut } from "../store/user-slice";
+import { fetchUserPut } from "../../store/user-slice";
 import "./pages.scss";
 
 function EditProfile() {

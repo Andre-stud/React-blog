@@ -3,11 +3,10 @@ import Card from "../card";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 
-function CardsList() {
+function CardsList({ page }) {
   const id = 10;
 
   const articlesData = useSelector((state) => state.articles.articles);
-  // console.log(articlesData)
 
   const articles =
     articlesData.length !== 0
@@ -21,6 +20,7 @@ function CardsList() {
           const tagList = el.tagList;
           const slug = el.slug;
           const idx = id + i;
+          const favorited = el.favorited;
 
           return (
             <li key={idx} className="cards-list__item">
@@ -34,6 +34,8 @@ function CardsList() {
                 tagList={tagList}
                 slug={slug}
                 idx={idx}
+                favorited={favorited}
+                page={page}
               />
             </li>
           );

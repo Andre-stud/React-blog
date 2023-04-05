@@ -7,11 +7,10 @@ import NewArticlePage from "../pages/new-article-page";
 import ArticlePage from "../pages/article-page";
 import CardsList from "../cards-list";
 import EditProfile from "../pages/edit-profile";
-import EditArticlePage from "../pages/edit-article";
 import Layout from "../layout";
 import { Pagination } from "antd";
 import { Routes, Route } from "react-router-dom";
-import { fetchArticles } from "../store/articles-slice";
+import { fetchArticles } from "../../store/articles-slice";
 
 import "./app.scss";
 
@@ -19,10 +18,6 @@ function App() {
   const [pageNumber, setPageNumber] = useState(1);
 
   const articleData = useSelector((state) => state.articles.article);
-
-  // if (userData) {
-  //   console.log("true");
-  // }
 
   const articlesCount = useSelector(
     (state) => state.articles.articles.articlesCount
@@ -45,7 +40,7 @@ function App() {
 
   const cardListPage = (
     <div className="body-items">
-      <CardsList />
+      <CardsList page={page} />
       <Pagination
         onChange={changePagination}
         defaultCurrent={1}
@@ -59,7 +54,7 @@ function App() {
   return (
     <div className="body">
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout page={page} />}>
           <Route index element={cardListPage} />
           <Route path="/sing-up" element={<NewAccountPage />} />
           <Route path="/sing-in" element={<SignInPage />} />

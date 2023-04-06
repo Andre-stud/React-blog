@@ -43,7 +43,7 @@ function App() {
       <CardsList page={page} />
       <Pagination
         onChange={changePagination}
-        defaultCurrent={1}
+        defaultCurrent={pageNumber}
         defaultPageSize={1}
         total={pageCount}
         className="body-items__pagination"

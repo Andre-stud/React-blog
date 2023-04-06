@@ -36,7 +36,7 @@ export const fetchArticle = createAsyncThunk(
   "article/fetchArticle",
   async (value, { rejectWithValue, dispatch }) => {
     const userAuthorized = localStorage.getItem("user");
-    const token = JSON.parse(userAuthorized).user.token;
+    const token = JSON.parse(userAuthorized)?.user.token;
     try {
       const responseArticle = await fetch(
         `https://blog.kata.academy/api/articles/${value}`,

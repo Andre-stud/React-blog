@@ -7,7 +7,7 @@ import {
   fetchArticles,
 } from "../../store/articles-slice";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Card({
   userName,
@@ -25,9 +25,24 @@ function Card({
   const [isLike, setIsLike] = useState(favorited);
   const [likesCount, setLikesCount] = useState(favoritesCount);
 
+  useEffect(() => {
+    setLikesCount(favoritesCount);
+    setIsLike(favorited);
+  }, [favorited, favoritesCount]);
+
+  const reduction = (text, limit) => {
+    let changedText = text;
+    changedText = changedText.trim();
+    if (changedText.length <= limit) return changedText;
+
+    changedText = changedText.slice(0, limit);
+
+    return `${changedText.trim()}...`;
+  };
+
   const cardTagList = tagList.map((el, id) => (
     <span key={idx + id} className="tag">
-      {el}
+      {reduction(el, 25)}
     </span>
   ));
 
@@ -78,14 +93,14 @@ function Card({
           to={`/articles/${slug}`}
           className="card-header__title"
         >
-          {title}
+          {reduction(title, 97)}
         </Link>
         {like}
 
         <span className="card-header__likes-counter">{likesCount}</span>
       </div>
       {cardTagList}
-      <p className="text-card">{description}</p>
+      <p className="text-card">{reduction(description, 370)}</p>
       <div className="user-information">
         <div className="user-information__card">
           <span className="user-information__name">{userName}</span>

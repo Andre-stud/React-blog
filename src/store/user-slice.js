@@ -16,13 +16,13 @@ export const fetchUser = createAsyncThunk(
       );
 
       if (!responseUser.ok) {
-        throw new Error("responseUser error");
+        throw new Error("error");
       }
 
       const user = await responseUser.json();
       localStorage.setItem("user", JSON.stringify(user));
 
-      return user;
+      return responseUser.ok;
     } catch (error) {
       return rejectWithValue(error.message);
     }

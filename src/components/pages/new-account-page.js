@@ -30,7 +30,7 @@ function NewAccountPage() {
     };
     const path = "users";
 
-    dispatch(fetchUser(userData, path)).then((value) => {
+    dispatch(fetchUser({ userData, path })).then((value) => {
       if (value.meta.requestStatus === "fulfilled") {
         navigate("/", { replace: true });
         setNameEmailError(false);

@@ -106,6 +106,10 @@ function NewArticlePage({ articleData, page }) {
                   message:
                     "You can use only english letters and digits without spaces and other symbols",
                 },
+                maxLength: {
+                  value: 25,
+                  message: "Your tag must be no more than 25 characters.",
+                },
               })}
               className="sing-page__input tag-input"
               placeholder="Tags"
@@ -191,7 +195,7 @@ function NewArticlePage({ articleData, page }) {
       <label className="sing-page__name-input new-article__name-input">
         Tags
         <ul className="tags-options">
-          {fields.length !== 0 ? allTags.reverse() : null}
+          {fields.length !== 0 ? allTags.reverse() : allTags}
         </ul>
       </label>
       <Input

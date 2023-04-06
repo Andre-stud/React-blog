@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { fetchUser } from "../../store/user-slice";
 import "./pages.scss";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 function SignInPage() {
   const {
@@ -11,6 +12,8 @@ function SignInPage() {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const [formError, setFormError] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,8 +29,12 @@ function SignInPage() {
     const path = "users/login";
 
     dispatch(fetchUser({ userData, path })).then((value) => {
-      if (value.meta.requestStatus === "fulfilled") {
+      if (value.payload === true) {
+        setFormError(false);
         navigate("/", { replace: true });
+      }
+      if (value.payload === "error") {
+        setFormError(true);
       }
     });
   };
@@ -55,6 +62,9 @@ function SignInPage() {
           {errors?.email?.message || "Error!"}
         </span>
       )}
+      {formError && !errors?.email ? (
+        <span style={{ color: "#F5222D" }}>Wrong email or password.</span>
+      ) : null}
 
       <label className="sing-page__name-input">
         Password
@@ -79,6 +89,9 @@ function SignInPage() {
           {errors?.password?.message || "Error!"}
         </span>
       )}
+      {formError && !errors?.password ? (
+        <span style={{ color: "#F5222D" }}>Wrong email or password.</span>
+      ) : null}
 
       <Input
         type="submit"

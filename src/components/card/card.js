@@ -40,9 +40,9 @@ function Card({
   const cardTagList = tagList.map((el) => {
     elKey += 1;
     return (
-      <span key={elKey} className="tag">
+      <li key={elKey} className="tag">
         {reduction(el, 25)}
-      </span>
+      </li>
     );
   });
 
@@ -89,10 +89,9 @@ function Card({
           {reduction(title, 97)}
         </Link>
         {like}
-
         <span className="card-header__likes-counter">{likesCount}</span>
       </div>
-      {cardTagList}
+      <ul className="card-header__teg-list">{cardTagList}</ul>
       <p className="text-card">{reduction(description, 370)}</p>
       <div className="user-information">
         <div className="user-information__card">

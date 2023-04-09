@@ -42,7 +42,8 @@ function App() {
       <CardsList page={page} />
       <Pagination
         onChange={changePagination}
-        defaultCurrent={pageNumber}
+        defaultCurrent={1}
+        current={pageNumber}
         defaultPageSize={1}
         total={pageCount}
         className="body-items__pagination"
@@ -53,7 +54,7 @@ function App() {
   return (
     <div className="body">
       <Routes>
-        <Route path="/" element={<Layout page={page} />}>
+        <Route path="/" element={<Layout page={page} changePagination={changePagination} />}>
           <Route index element={cardListPage} />
           <Route path="/sing-up" element={<NewAccountPage />} />
           <Route path="/sing-in" element={<SignInPage />} />

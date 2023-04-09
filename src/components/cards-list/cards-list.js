@@ -1,7 +1,7 @@
 import './cards-list.scss';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
-import { Spin } from 'antd';
+import { Alert, Spin } from 'antd';
 
 import Card from '../card';
 
@@ -15,6 +15,16 @@ function CardsList({ page }) {
   const style = statusLoading ? 'cards-list__item-opacity' : 'cards-list__item';
   const spiner =
     statusLoading && articlesData.length !== 0 ? <Spin className="spiner" tip="Loading" size="large" /> : null;
+  const alert =
+    statusLoadArticles === 'rejected' ? (
+      <Alert
+        message="Page loading error."
+        description="
+  An error occurred while loading this page. Please check your internet connection and try again."
+        type="error"
+        closable
+      />
+    ) : null;
 
   const articles =
     articlesData.length !== 0
@@ -53,6 +63,7 @@ function CardsList({ page }) {
   return (
     <ul className="cards-list">
       {spiner}
+      {alert}
       {articles}
     </ul>
   );

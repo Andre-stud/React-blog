@@ -63,11 +63,16 @@ function ArticlePage({ articleData, page }) {
       </div>
     ) : null;
 
-  const cardTagList = tagList.map((el) => (
-    <span key={el} className="tag">
-      {el}
-    </span>
-  ));
+  let elKey = 9;
+
+  const cardTagList = tagList.map((el) => {
+    elKey += 1;
+    return (
+      <li key={elKey} className="tag">
+        {el}
+      </li>
+    );
+  });
 
   const likeClick = () => {
     const method = 'POST';
@@ -109,7 +114,7 @@ function ArticlePage({ articleData, page }) {
               {like}
               <span className="card-header__likes-counter">{favoritesCount}</span>
             </div>
-            {cardTagList}
+            <ul className="card-header__teg-list">{cardTagList}</ul>
             <p className="text-card">{description}</p>
             <ReactMarkdown className="body-class">{body}</ReactMarkdown>
             <div className="user-information">

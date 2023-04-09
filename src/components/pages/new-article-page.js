@@ -20,7 +20,7 @@ function NewArticlePage({ articleData }) {
 
   const loadStatus = useSelector((state) => state.articles.statusEditArticle);
   const loadStatusArticle = useSelector((state) => state.articles.statusArticle);
-  
+
   const loading = loadStatus === 'loading' || loadStatusArticle === 'loading';
 
   const {
@@ -61,7 +61,7 @@ function NewArticlePage({ articleData }) {
     if (articleData) {
       dispatch(fetchEditArticle({ dataArticle, slug })).then((data) => {
         if (data.payload.ok === true) {
-          dispatch(fetchArticle(slug)).then((articleValue)=>{
+          dispatch(fetchArticle(slug)).then((articleValue) => {
             navigate(`/articles/${articleValue.payload.slug}`, { replace: true });
           });
         }
@@ -71,7 +71,7 @@ function NewArticlePage({ articleData }) {
     if (!articleData) {
       dispatch(fetchCreateArticle(dataArticle)).then((data) => {
         if (data.payload.ok === true) {
-          dispatch(fetchArticle(data.payload.slug)).then((articleValue)=>{
+          dispatch(fetchArticle(data.payload.slug)).then((articleValue) => {
             navigate(`/articles/${articleValue.payload.slug}`, { replace: true });
           });
         }

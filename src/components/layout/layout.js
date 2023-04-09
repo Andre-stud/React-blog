@@ -7,7 +7,7 @@ import { fetchArticles } from '../../store/articles-slice';
 
 import avatar from './avatar.svg';
 
-function Layout() {
+function Layout({ changePagination }) {
   const userDat = useSelector((state) => state.regUser.userData);
   const userStatus = useSelector((state) => state.regUser.status);
   const userAuthorized = localStorage.getItem('user');
@@ -38,7 +38,8 @@ function Layout() {
     setUserData(null);
   };
 
-  const clickBlogName =() =>{
+  const clickBlogName = () => {
+    changePagination(1);
     dispatch(fetchArticles(0));
   };
 

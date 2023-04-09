@@ -1,1 +1,1 @@
-https://blog-nb93zj4i4-andrejzakasovskij-gmailcom.vercel.app/
+https://blog-andrejzakasovskij-gmailcom.vercel.app/

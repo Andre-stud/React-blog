@@ -1,13 +1,10 @@
-import "./card.scss";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import {
-  fetchArticle,
-  fetchLikeArticle,
-  fetchArticles,
-} from "../../store/articles-slice";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import './card.scss';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+
+import { fetchArticle, fetchLikeArticle, fetchArticles } from '../../store/articles-slice';
 
 function Card({
   userName,
@@ -18,12 +15,12 @@ function Card({
   title,
   tagList,
   slug,
-  idx,
   favorited,
   page,
 }) {
   const [isLike, setIsLike] = useState(favorited);
   const [likesCount, setLikesCount] = useState(favoritesCount);
+  let elKey = 9;
 
   useEffect(() => {
     setLikesCount(favoritesCount);
@@ -40,11 +37,14 @@ function Card({
     return `${changedText.trim()}...`;
   };
 
-  const cardTagList = tagList.map((el, id) => (
-    <span key={idx + id} className="tag">
-      {reduction(el, 25)}
-    </span>
-  ));
+  const cardTagList = tagList.map((el) => {
+    elKey += 1;
+    return (
+      <span key={elKey} className="tag">
+        {reduction(el, 25)}
+      </span>
+    );
+  });
 
   const dispatch = useDispatch();
 
@@ -53,7 +53,7 @@ function Card({
   };
 
   const likeClick = () => {
-    const method = "POST";
+    const method = 'POST';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
         setIsLike(true);
@@ -65,7 +65,7 @@ function Card({
   };
 
   const unLikeClick = () => {
-    const method = "DELETE";
+    const method = 'DELETE';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
         setIsLike(false);
@@ -77,10 +77,7 @@ function Card({
   };
 
   const like = isLike ? (
-    <HeartFilled
-      onClick={unLikeClick}
-      className="card-header__button-like heart-filled"
-    />
+    <HeartFilled onClick={unLikeClick} className="card-header__button-like heart-filled" />
   ) : (
     <HeartOutlined onClick={likeClick} className="card-header__button-like" />
   );
@@ -88,11 +85,7 @@ function Card({
   return (
     <div className="card">
       <div className="card-header">
-        <Link
-          onClick={clickLink}
-          to={`/articles/${slug}`}
-          className="card-header__title"
-        >
+        <Link onClick={clickLink} to={`/articles/${slug}`} className="card-header__title">
           {reduction(title, 97)}
         </Link>
         {like}
@@ -104,16 +97,10 @@ function Card({
       <div className="user-information">
         <div className="user-information__card">
           <span className="user-information__name">{userName}</span>
-          <span className="user-information__publication-date">
-            {createArticle}
-          </span>
+          <span className="user-information__publication-date">{createArticle}</span>
         </div>
 
-        <img
-          src={authorAvatar}
-          alt="User avatar"
-          className="user-information__avatar"
-        />
+        <img src={authorAvatar} alt="User avatar" className="user-information__avatar" />
       </div>
     </div>
   );

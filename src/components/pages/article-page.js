@@ -1,28 +1,24 @@
-import "./pages.scss";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Button, Popconfirm } from "antd";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import {
-  fetchDeliteArticle,
-  fetchArticles,
-  fetchLikeArticle,
-  fetchArticle,
-} from "../../store/articles-slice";
-import ReactMarkdown from "react-markdown";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import './pages.scss';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+
+import { fetchDeliteArticle, fetchArticles, fetchLikeArticle, fetchArticle } from '../../store/articles-slice';
 
 function ArticlePage({ articleData, page }) {
   const userName = articleData.author.username;
   const authorAvatar = articleData.author.image;
-  const createArticle = format(new Date(articleData.createdAt), "MMMM d, y");
-  const description = articleData.description;
+  const createArticle = format(new Date(articleData.createdAt), 'MMMM d, y');
+  const { description } = articleData;
   const likesCount = articleData.favoritesCount;
-  const title = articleData.title;
-  const tagList = articleData.tagList;
-  const body = articleData.body;
-  const slug = articleData.slug;
+  const { title } = articleData;
+  const { tagList } = articleData;
+  const { body } = articleData;
+  const { slug } = articleData;
   const isLike = articleData.favorited;
 
   const [favorited, setFavorite] = useState(isLike);
@@ -31,17 +27,15 @@ function ArticlePage({ articleData, page }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userAuthorized = localStorage.getItem("user");
-  const userAuthorizedName = userAuthorized
-    ? JSON.parse(userAuthorized).user.username
-    : null;
+  const userAuthorized = localStorage.getItem('user');
+  const userAuthorizedName = userAuthorized ? JSON.parse(userAuthorized).user.username : null;
 
-  const deletionConfirmationText = "Are you sure to delete this article?";
+  const deletionConfirmationText = 'Are you sure to delete this article?';
 
   const onClickYes = () => {
     dispatch(fetchDeliteArticle(slug)).then((value) => {
       if (value.payload === true) {
-        navigate("/", { replace: true });
+        navigate('/', { replace: true });
         dispatch(fetchArticles(page));
       }
     });
@@ -76,7 +70,7 @@ function ArticlePage({ articleData, page }) {
   ));
 
   const likeClick = () => {
-    const method = "POST";
+    const method = 'POST';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
         setFavorite(true);
@@ -88,7 +82,7 @@ function ArticlePage({ articleData, page }) {
   };
 
   const unLikeClick = () => {
-    const method = "DELETE";
+    const method = 'DELETE';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
         setFavorite(false);
@@ -100,10 +94,7 @@ function ArticlePage({ articleData, page }) {
   };
 
   const like = favorited ? (
-    <HeartFilled
-      onClick={unLikeClick}
-      className="card-header__button-like heart-filled"
-    />
+    <HeartFilled onClick={unLikeClick} className="card-header__button-like heart-filled" />
   ) : (
     <HeartOutlined onClick={likeClick} className="card-header__button-like" />
   );
@@ -116,9 +107,7 @@ function ArticlePage({ articleData, page }) {
             <div className="card-header">
               <p className="card-header__title">{title}</p>
               {like}
-              <span className="card-header__likes-counter">
-                {favoritesCount}
-              </span>
+              <span className="card-header__likes-counter">{favoritesCount}</span>
             </div>
             {cardTagList}
             <p className="text-card">{description}</p>
@@ -126,15 +115,9 @@ function ArticlePage({ articleData, page }) {
             <div className="user-information">
               <div className="user-information__card">
                 <span className="user-information__name">{userName}</span>
-                <span className="user-information__publication-date">
-                  {createArticle}
-                </span>
+                <span className="user-information__publication-date">{createArticle}</span>
               </div>
-              <img
-                src={authorAvatar}
-                alt="User avatar"
-                className="user-information__avatar"
-              />
+              <img src={authorAvatar} alt="User avatar" className="user-information__avatar" />
             </div>
             {articleEditButtons}
           </div>

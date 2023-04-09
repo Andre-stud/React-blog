@@ -1,15 +1,20 @@
-import { Input } from "antd";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchUserPut } from "../../store/user-slice";
-import "./pages.scss";
+import { Input } from 'antd';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { fetchUserPut } from '../../store/user-slice';
+import './pages.scss';
 
 function EditProfile() {
   const [nameEmailError, setNameEmailError] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const loadStatus = useSelector((state) => state.regUser.status);
+
+  const loading = loadStatus === 'loading';
 
   const {
     register,
@@ -28,11 +33,11 @@ function EditProfile() {
     };
 
     dispatch(fetchUserPut(newUserData)).then((value) => {
-      if (value.meta.requestStatus === "fulfilled") {
-        navigate("/", { replace: true });
+      if (value.meta.requestStatus === 'fulfilled') {
+        navigate('/', { replace: true });
         setNameEmailError(false);
       }
-      if (value.meta.requestStatus === "rejected") {
+      if (value.meta.requestStatus === 'rejected') {
         setNameEmailError(true);
       }
     });
@@ -45,111 +50,92 @@ function EditProfile() {
       <label className="sing-page__name-input">
         Username
         <input
-          {...register("username", {
-            required: "Please enter a value.",
+          {...register('username', {
+            required: 'Please enter a value.',
             pattern: {
               value: /^[a-z][a-z0-9]*$/,
-              message: "You can only use lowercase English letters and numbers",
+              message: 'You can only use lowercase English letters and numbers',
             },
             minLength: {
               value: 3,
-              message: "Your user name needs to be at least 3 characters.",
+              message: 'Your user name needs to be at least 3 characters.',
             },
             maxLength: {
               value: 20,
-              message: "Your user name must be no more than 20 characters.",
+              message: 'Your user name must be no more than 20 characters.',
             },
           })}
           className="sing-page__input"
           placeholder="Username"
         />
       </label>
-      {nameEmailError ? (
-        <span style={{ color: "#F5222D" }}>Data already in use</span>
-      ) : null}
-      {errors?.username && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.username?.message || "Error!"}
-        </span>
-      )}
+      {nameEmailError ? <span style={{ color: '#F5222D' }}>Data already in use</span> : null}
+      {errors?.username && <span style={{ color: '#F5222D' }}>{errors?.username?.message || 'Error!'}</span>}
 
       <label className="sing-page__name-input">
         Email address
         <input
-          {...register("email", {
-            required: "Please enter email.",
+          {...register('email', {
+            required: 'Please enter email.',
             pattern: {
               value:
                 /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu,
-              message: "Please enter a valid email.",
+              message: 'Please enter a valid email.',
             },
           })}
           className="sing-page__input"
           placeholder="Email address"
         />
       </label>
-      {nameEmailError ? (
-        <span style={{ color: "#F5222D" }}>Data already in use</span>
-      ) : null}
-      {errors?.email && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.email?.message || "Error!"}
-        </span>
-      )}
+      {nameEmailError ? <span style={{ color: '#F5222D' }}>Data already in use</span> : null}
+      {errors?.email && <span style={{ color: '#F5222D' }}>{errors?.email?.message || 'Error!'}</span>}
 
       <label className="sing-page__name-input">
         New password
         <input
-          {...register("password", {
-            required: "Please enter a value.",
+          type="password"
+          {...register('password', {
+            required: 'Please enter a value.',
             minLength: {
               value: 6,
-              message: "Your password needs to be at least 6 characters.",
+              message: 'Your password needs to be at least 6 characters.',
             },
             maxLength: {
               value: 40,
-              message: "Your user name must be no more than 20 characters.",
+              message: 'Your user name must be no more than 20 characters.',
             },
           })}
           className="sing-page__input"
           placeholder="Password"
         />
       </label>
-      {errors?.password && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.password?.message || "Error!"}
-        </span>
-      )}
+      {errors?.password && <span style={{ color: '#F5222D' }}>{errors?.password?.message || 'Error!'}</span>}
 
       <label className="sing-page__name-input">
         Avatar image (url)
         <input
-          {...register("url", {
-            required: "Please enter url.",
+          {...register('url', {
+            required: 'Please enter url.',
             pattern: {
-              value:
-                /(^https?:\/\/)?[a-z0-9~_\-\.]+\.[a-z]{2,9}(\/|:|\?[!-~]*)?$/i,
-              message: "Please enter a valid url.",
+              value: /(^https?:\/\/)?[a-z0-9~_\-.]+\.[a-z]{2,9}(\/|:|\?[!-~]*)?$/i,
+              message: 'Please enter a valid url.',
             },
           })}
           className="sing-page__input"
           placeholder="Avatar image"
         />
       </label>
-      {nameEmailError ? (
-        <span style={{ color: "#F5222D" }}>Data already in use</span>
-      ) : null}
-      {errors?.url && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.url?.message || "Error!"}
-        </span>
-      )}
+      {nameEmailError ? <span style={{ color: '#F5222D' }}>Data already in use</span> : null}
+      {errors?.url && <span style={{ color: '#F5222D' }}>{errors?.url?.message || 'Error!'}</span>}
 
       <Input
         type="submit"
+        {...register('test', {
+          disabled: loading,
+        })}
         className="sing-page__button edit-profile-button"
-        value={"Save"}
-      ></Input>
+        value="Save"
+      />
     </form>
   );
 }

@@ -14,16 +14,13 @@
   margin-top: 27px;
 }
 
-:where(.css-dev-only-do-not-override-mxhywb).ant-pagination
-  .ant-pagination-item-active {
+:where(.css-dev-only-do-not-override-mxhywb).ant-pagination .ant-pagination-item-active {
   font-weight: 600;
   background-color: #1890ff;
   border-color: #1890ff;
 }
 
-:where(.css-dev-only-do-not-override-mxhywb).ant-pagination
-  .ant-pagination-item-active
-  a {
+:where(.css-dev-only-do-not-override-mxhywb).ant-pagination .ant-pagination-item-active a {
   color: #ffffff;
 }
 

@@ -1,10 +1,11 @@
-import { Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { fetchUser } from "../../store/user-slice";
-import "./pages.scss";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import './pages.scss';
+import { Input } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+
+import { fetchUser } from '../../store/user-slice';
 
 function SignInPage() {
   const {
@@ -14,6 +15,10 @@ function SignInPage() {
   } = useForm();
 
   const [formError, setFormError] = useState(false);
+
+  const loadStatus = useSelector((state) => state.regUser.status);
+
+  const loading = loadStatus === 'loading';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,14 +31,14 @@ function SignInPage() {
       },
     };
 
-    const path = "users/login";
+    const path = 'users/login';
 
-    dispatch(fetchUser({ userData, path })).then((value) => {
-      if (value.payload === true) {
+    dispatch(fetchUser({ userData, path })).then((data) => {
+      if (data.payload === true) {
         setFormError(false);
-        navigate("/", { replace: true });
+        navigate('/', { replace: true });
       }
-      if (value.payload === "error") {
+      if (data.payload === 'error') {
         setFormError(true);
       }
     });
@@ -45,62 +50,54 @@ function SignInPage() {
       <label className="sing-page__name-input">
         Email address
         <input
-          {...register("email", {
-            required: "Please enter email.",
+          {...register('email', {
+            required: 'Please enter email.',
             pattern: {
               value:
                 /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu,
-              message: "Please enter a valid email.",
+              message: 'Please enter a valid email.',
             },
           })}
           className="sing-page__input"
           placeholder="Email address"
         />
       </label>
-      {errors?.email && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.email?.message || "Error!"}
-        </span>
-      )}
-      {formError && !errors?.email ? (
-        <span style={{ color: "#F5222D" }}>Wrong email or password.</span>
-      ) : null}
+      {errors?.email && <span style={{ color: '#F5222D' }}>{errors?.email?.message || 'Error!'}</span>}
+      {formError && !errors?.email ? <span style={{ color: '#F5222D' }}>Wrong email or password.</span> : null}
 
       <label className="sing-page__name-input">
         Password
         <input
-          {...register("password", {
-            required: "Please enter password.",
+          type="password"
+          {...register('password', {
+            required: 'Please enter password.',
             minLength: {
               value: 6,
-              message: "Your password needs to be at least 6 characters.",
+              message: 'Your password needs to be at least 6 characters.',
             },
             maxLength: {
               value: 40,
-              message: "Your user name must be no more than 20 characters.",
+              message: 'Your user name must be no more than 20 characters.',
             },
           })}
           className="sing-page__input"
           placeholder="Password"
         />
       </label>
-      {errors?.password && (
-        <span style={{ color: "#F5222D" }}>
-          {errors?.password?.message || "Error!"}
-        </span>
-      )}
-      {formError && !errors?.password ? (
-        <span style={{ color: "#F5222D" }}>Wrong email or password.</span>
-      ) : null}
+      {errors?.password && <span style={{ color: '#F5222D' }}>{errors?.password?.message || 'Error!'}</span>}
+      {formError && !errors?.password ? <span style={{ color: '#F5222D' }}>Wrong email or password.</span> : null}
 
       <Input
         type="submit"
+        {...register('test', {
+          disabled: loading,
+        })}
         className="sing-page__button"
-        value={"Login"}
-      ></Input>
+        value="Login"
+      />
       <p className="sing-page__question">
-        Don’t have an account?{" "}
-        <Link to={"/sing-up"} className="sing-link">
+        Don’t have an account?{' '}
+        <Link to="/sing-up" className="sing-link">
           Sign Up
         </Link>
         .

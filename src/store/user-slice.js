@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchUser = createAsyncThunk('regUser/fetchUser', async ({ userData, path }, { rejectWithValue }) => {
+export const fetchUser = createAsyncThunk('regUser/fetchUser', async ({ userData, path }) => {
   try {
     const responseUser = await fetch(`https://blog.kata.academy/api/${path}`, {
       method: 'POST',
@@ -19,11 +19,11 @@ export const fetchUser = createAsyncThunk('regUser/fetchUser', async ({ userData
 
     return responseUser.ok;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
 
-export const fetchUserPut = createAsyncThunk('regUser/fetchUserPut', async (userData, { rejectWithValue }) => {
+export const fetchUserPut = createAsyncThunk('regUser/fetchUserPut', async (userData) => {
   try {
     const userAuthorized = localStorage.getItem('user');
     const { token } = JSON.parse(userAuthorized).user;
@@ -47,7 +47,7 @@ export const fetchUserPut = createAsyncThunk('regUser/fetchUserPut', async (user
 
     return user;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
 
@@ -56,7 +56,6 @@ const userSlice = createSlice({
   initialState: {
     userData: null,
     status: null,
-    error: null,
   },
   reducers: {
     addUserData(state, action) {
@@ -66,27 +65,23 @@ const userSlice = createSlice({
   extraReducers: {
     [fetchUser.pending]: (state) => {
       state.status = 'loading';
-      state.error = null;
     },
     [fetchUser.fulfilled]: (state, actions) => {
       state.status = 'resolved';
       state.userData = actions.payload;
     },
-    [fetchUser.rejected]: (state, actions) => {
+    [fetchUser.rejected]: (state) => {
       state.status = 'rejected';
-      state.error = actions.payload;
     },
     [fetchUserPut.pending]: (state) => {
       state.status = 'loading';
-      state.error = null;
     },
     [fetchUserPut.fulfilled]: (state, actions) => {
       state.status = 'resolved';
       state.userData = actions.payload;
     },
-    [fetchUserPut.rejected]: (state, actions) => {
+    [fetchUserPut.rejected]: (state) => {
       state.status = 'rejected';
-      state.error = actions.payload;
     },
   },
 });

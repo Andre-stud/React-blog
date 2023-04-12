@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (value, { rejectWithValue }) => {
+export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (value) => {
   const userAuthorized = localStorage.getItem('user');
   const token = JSON.parse(userAuthorized)?.user.token;
   const isToket = token
@@ -22,11 +22,11 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (v
 
     return articles;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
 
-export const fetchArticle = createAsyncThunk('article/fetchArticle', async (value, { rejectWithValue, dispatch }) => {
+export const fetchArticle = createAsyncThunk('article/fetchArticle', async (value) => {
   const userAuthorized = localStorage.getItem('user');
   const token = JSON.parse(userAuthorized)?.user.token;
   try {
@@ -41,23 +41,22 @@ export const fetchArticle = createAsyncThunk('article/fetchArticle', async (valu
     }
 
     const article = await responseArticle.json();
-    // eslint-disable-next-line no-use-before-define
-    dispatch(selectArticle(article));
 
     const data = {
       ok: responseArticle.ok,
       slug: article.article.slug,
+      article,
     };
 
     return data;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
 
 export const fetchEditArticle = createAsyncThunk(
   'article/fetchEditArticle',
-  async ({ dataArticle, slug }, { rejectWithValue }) => {
+  async ({ dataArticle, slug }) => {
     const userAuthorized = localStorage.getItem('user');
     const { token } = JSON.parse(userAuthorized).user;
 
@@ -85,12 +84,12 @@ export const fetchEditArticle = createAsyncThunk(
 
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return error.message;
     }
   }
 );
 
-export const fetchDeliteArticle = createAsyncThunk('article/fetchDeliteArticle', async (value, { rejectWithValue }) => {
+export const fetchDeliteArticle = createAsyncThunk('article/fetchDeliteArticle', async (value) => {
   const userAuthorized = localStorage.getItem('user');
   const { token } = JSON.parse(userAuthorized).user;
 
@@ -108,13 +107,13 @@ export const fetchDeliteArticle = createAsyncThunk('article/fetchDeliteArticle',
 
     return responseArticle.ok;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
 
 export const fetchCreateArticle = createAsyncThunk(
   'article/fetchCreateArticle',
-  async (dataArticle, { rejectWithValue }) => {
+  async (dataArticle) => {
     const userAuthorized = localStorage.getItem('user');
     const { token } = JSON.parse(userAuthorized).user;
 
@@ -142,14 +141,14 @@ export const fetchCreateArticle = createAsyncThunk(
 
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return error.message;
     }
   }
 );
 
 export const fetchLikeArticle = createAsyncThunk(
   'article/fetchLikeArticle',
-  async ({ slug, method }, { rejectWithValue }) => {
+  async ({ slug, method }) => {
     const userAuthorized = localStorage.getItem('user');
     const { token } = JSON.parse(userAuthorized).user;
 
@@ -167,7 +166,7 @@ export const fetchLikeArticle = createAsyncThunk(
 
       return responseArticle.ok;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return error.message;
     }
   }
 );
@@ -181,7 +180,6 @@ const articlesSlice = createSlice({
     status: null,
     statusArticle: null,
     statusEditArticle: null,
-    error: null,
   },
   reducers: {
     selectArticle(state, actions) {
@@ -191,48 +189,41 @@ const articlesSlice = createSlice({
   extraReducers: {
     [fetchArticles.pending]: (state) => {
       state.status = 'loading';
-      state.error = null;
     },
     [fetchArticles.fulfilled]: (state, actions) => {
       state.status = 'resolved';
       state.articles = actions.payload;
     },
-    [fetchArticles.rejected]: (state, actions) => {
+    [fetchArticles.rejected]: (state) => {
       state.status = 'rejected';
-      state.error = actions.payload;
     },
     [fetchArticle.pending]: (state) => {
       state.statusArticle = 'loading';
-      state.error = null;
     },
-    [fetchArticle.fulfilled]: (state) => {
+    [fetchArticle.fulfilled]: (state, actions) => {
       state.statusArticle = 'resolved';
+      state.article = actions.payload.article;
     },
-    [fetchArticle.rejected]: (state, actions) => {
+    [fetchArticle.rejected]: (state) => {
       state.statusArticle = 'rejected';
-      state.error = actions.payload;
     },
     [fetchEditArticle.pending]: (state) => {
       state.statusEditArticle = 'loading';
-      state.error = null;
     },
     [fetchEditArticle.fulfilled]: (state) => {
       state.statusEditArticle = 'resolved';
     },
-    [fetchEditArticle.rejected]: (state, actions) => {
+    [fetchEditArticle.rejected]: (state) => {
       state.statusEditArticle = 'rejected';
-      state.error = actions.payload;
     },
     [fetchCreateArticle.pending]: (state) => {
       state.statusEditArticle = 'loading';
-      state.error = null;
     },
     [fetchCreateArticle.fulfilled]: (state) => {
       state.statusEditArticle = 'resolved';
     },
-    [fetchCreateArticle.rejected]: (state, actions) => {
+    [fetchCreateArticle.rejected]: (state) => {
       state.statusEditArticle = 'rejected';
-      state.error = actions.payload;
     },
   },
 });

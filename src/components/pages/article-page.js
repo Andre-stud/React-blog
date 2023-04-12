@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
 
 import { fetchDeliteArticle, fetchArticles, fetchLikeArticle, fetchArticle } from '../../store/articles-slice';
 
@@ -13,16 +12,7 @@ function ArticlePage({ articleData, page }) {
   const userName = articleData.author.username;
   const authorAvatar = articleData.author.image;
   const createArticle = format(new Date(articleData.createdAt), 'MMMM d, y');
-  const { description } = articleData;
-  const likesCount = articleData.favoritesCount;
-  const { title } = articleData;
-  const { tagList } = articleData;
-  const { body } = articleData;
-  const { slug } = articleData;
-  const isLike = articleData.favorited;
-
-  const [favorited, setFavorite] = useState(isLike);
-  const [favoritesCount, setFavoritesCount] = useState(likesCount);
+  const { description, title, tagList, body, slug, favoritesCount, favorited } = articleData;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -78,8 +68,6 @@ function ArticlePage({ articleData, page }) {
     const method = 'POST';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
-        setFavorite(true);
-        setFavoritesCount(favoritesCount + 1);
         dispatch(fetchArticles(page));
         dispatch(fetchArticle(slug));
       }
@@ -90,8 +78,6 @@ function ArticlePage({ articleData, page }) {
     const method = 'DELETE';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
-        setFavorite(false);
-        setFavoritesCount(favoritesCount - 1);
         dispatch(fetchArticles(page));
         dispatch(fetchArticle(slug));
       }

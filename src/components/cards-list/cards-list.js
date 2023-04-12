@@ -4,12 +4,13 @@ import { format } from 'date-fns';
 import { Alert, Spin } from 'antd';
 
 import Card from '../card';
+import {selectArticlesData, selectStatusLoadArticles} from '../../selectors/selectors';
 
 function CardsList({ page }) {
   const id = 10;
 
-  const articlesData = useSelector((state) => state.articles.articles);
-  const statusLoadArticles = useSelector((state) => state.articles.status);
+  const articlesData = useSelector(selectArticlesData);
+  const statusLoadArticles = useSelector(selectStatusLoadArticles);
   const statusLoading = statusLoadArticles === 'loading';
 
   const style = statusLoading ? 'cards-list__item-opacity' : 'cards-list__item';
@@ -32,13 +33,8 @@ function CardsList({ page }) {
           const userName = el.author.username;
           const authorAvatar = el.author.image;
           const createArticle = format(new Date(el.createdAt), 'MMMM d, y');
-          const { description } = el;
-          const { favoritesCount } = el;
-          const { title } = el;
-          const { tagList } = el;
-          const { slug } = el;
+          const { description, favoritesCount, title, tagList, slug, favorited } = el;
           const idx = id + i;
-          const { favorited } = el;
 
           return (
             <li key={idx} className={style}>

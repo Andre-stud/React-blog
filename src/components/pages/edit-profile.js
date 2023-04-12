@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { fetchUserPut } from '../../store/user-slice';
+import {selectLoadStatus} from '../../selectors/selectors';
 import './pages.scss';
 
 function EditProfile() {
@@ -12,7 +13,7 @@ function EditProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loadStatus = useSelector((state) => state.regUser.status);
+  const loadStatus = useSelector(selectLoadStatus);
 
   const loading = loadStatus === 'loading';
 

@@ -2,7 +2,6 @@ import './card.scss';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
 
 import { fetchArticle, fetchLikeArticle, fetchArticles } from '../../store/articles-slice';
 
@@ -18,14 +17,8 @@ function Card({
   favorited,
   page,
 }) {
-  const [isLike, setIsLike] = useState(favorited);
-  const [likesCount, setLikesCount] = useState(favoritesCount);
-  let elKey = 9;
 
-  useEffect(() => {
-    setLikesCount(favoritesCount);
-    setIsLike(favorited);
-  }, [favorited, favoritesCount]);
+  let elKey = 9;
 
   const reduction = (text, limit) => {
     let changedText = text;
@@ -56,8 +49,6 @@ function Card({
     const method = 'POST';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
-        setIsLike(true);
-        setLikesCount(likesCount + 1);
         dispatch(fetchArticles(page));
         dispatch(fetchArticle(slug));
       }
@@ -68,15 +59,13 @@ function Card({
     const method = 'DELETE';
     dispatch(fetchLikeArticle({ slug, method })).then((value) => {
       if (value.payload) {
-        setIsLike(false);
-        setLikesCount(likesCount - 1);
         dispatch(fetchArticles(page));
         dispatch(fetchArticle(slug));
       }
     });
   };
 
-  const like = isLike ? (
+  const like = favorited ? (
     <HeartFilled onClick={unLikeClick} className="card-header__button-like heart-filled" />
   ) : (
     <HeartOutlined onClick={likeClick} className="card-header__button-like" />
@@ -89,7 +78,7 @@ function Card({
           {reduction(title, 97)}
         </Link>
         {like}
-        <span className="card-header__likes-counter">{likesCount}</span>
+        <span className="card-header__likes-counter">{favoritesCount}</span>
       </div>
       <ul className="card-header__teg-list">{cardTagList}</ul>
       <p className="text-card">{reduction(description, 370)}</p>

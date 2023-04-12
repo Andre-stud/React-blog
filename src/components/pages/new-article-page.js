@@ -5,6 +5,7 @@ import './pages.scss';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchCreateArticle, fetchEditArticle, fetchArticle } from '../../store/articles-slice';
+import {selectLoadStatusEdite, selectLoadStatusArticle} from '../../selectors/selectors';
 
 function NewArticlePage({ articleData }) {
   const dispatch = useDispatch();
@@ -18,8 +19,8 @@ function NewArticlePage({ articleData }) {
   const tagList = articleData?.tagList ? articleData.tagList : [];
   const slug = articleData?.slug ? articleData.slug : null;
 
-  const loadStatus = useSelector((state) => state.articles.statusEditArticle);
-  const loadStatusArticle = useSelector((state) => state.articles.statusArticle);
+  const loadStatus = useSelector(selectLoadStatusEdite);
+  const loadStatusArticle = useSelector(selectLoadStatusArticle);
 
   const loading = loadStatus === 'loading' || loadStatusArticle === 'loading';
 

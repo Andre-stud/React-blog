@@ -11,15 +11,16 @@ import CardsList from '../cards-list';
 import EditProfile from '../pages/edit-profile';
 import Layout from '../layout';
 import { fetchArticles } from '../../store/articles-slice';
+import {selectArticleData, selectArticlesCount} from '../../selectors/selectors';
 
 import './app.scss';
 
 function App() {
   const [pageNumber, setPageNumber] = useState(1);
 
-  const articleData = useSelector((state) => state.articles.article);
+  const articleData = useSelector(selectArticleData);
 
-  const articlesCount = useSelector((state) => state.articles.articles.articlesCount);
+  const articlesCount = useSelector(selectArticlesCount);
   const pageCount = articlesCount ? Math.ceil(articlesCount / 5) : 1;
 
   const slug = articleData?.article?.slug ? articleData.article.slug : null;

@@ -4,15 +4,16 @@ import { Link, Outlet } from 'react-router-dom';
 
 import { addUserData } from '../../store/user-slice';
 import { fetchArticles } from '../../store/articles-slice';
+import {selectUserDat, selectLoadStatus} from '../../selectors/selectors';
 
 import avatar from './avatar.svg';
 
 function Layout({ changePagination }) {
-  const userDat = useSelector((state) => state.regUser.userData);
-  const userStatus = useSelector((state) => state.regUser.status);
+  const userData = useSelector(selectUserDat);
+  const loadStatus = useSelector(selectLoadStatus);
   const userAuthorized = localStorage.getItem('user');
 
-  const [userData, setUserData] = useState(userDat);
+  const [isAuthorizad, setIsAuthorizad] = useState(false);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -21,12 +22,12 @@ function Layout({ changePagination }) {
   useEffect(() => {
     if (userAuthorized) {
       dispatch(addUserData(user.user));
-      setUserData(user.user);
+      setIsAuthorizad(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userStatus]);
+  }, [loadStatus]);
 
-  const personDitails = userData ? (
+  const personDitails = isAuthorizad ? (
     <Link to="/profile" className="user-info">
       <span className="user-info__name">{userData.username}</span>
       <img src={img} alt="User avatar" className="user-info__avatar" />
@@ -35,7 +36,7 @@ function Layout({ changePagination }) {
 
   const logOut = () => {
     localStorage.removeItem('user');
-    setUserData(null);
+    setIsAuthorizad(false);
   };
 
   const clickBlogName = () => {
@@ -58,26 +59,25 @@ function Layout({ changePagination }) {
 
           {personDitails}
 
-          {userData ? (
+          {isAuthorizad ? (
             <Link onClick={logOut} to="/" className="create-article link-log-out">
               Log Out
             </Link>
           ) : null}
 
-          {!userData ? (
+          {!isAuthorizad ? (
             <Link to="/sing-in" className="sing-in-link">
               Sign In
             </Link>
           ) : null}
 
-          {!userData ? (
+          {!isAuthorizad ? (
             <Link to="/sing-up" className="link-sing-up">
               Sign Up
             </Link>
           ) : null}
         </div>
       </header>
-
       <Outlet />
     </>
   );

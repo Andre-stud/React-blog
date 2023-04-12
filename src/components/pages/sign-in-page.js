@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
 import { fetchUser } from '../../store/user-slice';
+import { selectLoadStatus } from '../../selectors/selectors';
 
 function SignInPage() {
   const {
@@ -16,7 +17,7 @@ function SignInPage() {
 
   const [formError, setFormError] = useState(false);
 
-  const loadStatus = useSelector((state) => state.regUser.status);
+  const loadStatus = useSelector(selectLoadStatus);
 
   const loading = loadStatus === 'loading';
 

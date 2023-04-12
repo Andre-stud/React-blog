@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { fetchUser } from '../../store/user-slice';
+import {selectLoadStatus} from '../../selectors/selectors';
 import './pages.scss';
 
 function NewAccountPage() {
   const [stateCheckbox, setStateCheckbox] = useState(false);
   const [nameEmailError, setNameEmailError] = useState(false);
 
-  const loadStatus = useSelector((state) => state.regUser.status);
+  const loadStatus = useSelector(selectLoadStatus);
 
   const loading = loadStatus === 'loading';
 
